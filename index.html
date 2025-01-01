@@ -1,40 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gacha Game</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gacha Game</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Меню -->
-  <div id="menu" class="menu">
-    <h1 class="title">🔥 Gacha Menu 🔥</h1>
-    <button id="roll-btn" class="btn">Крутить Гачу</button>
-    <button id="roll-10-btn" class="btn">Крутить 10</button> <!-- Новая кнопка -->
-    <p id="counter-display" class="counter">До гарантированной S: <span id="rolls-left">90</span></p> <!-- Счётчик -->
-    <audio id="menu-music" loop autoplay>
-      <source src="assets/menu.mp3" type="audio/mpeg">
-    </audio>
-  </div>
+    <h1>Gacha Game</h1>
 
-  <!-- Анимация и результат -->
-  <div id="gacha-animation" class="gacha hidden">
-    <div class="screen-container">
-      <div class="screen"></div>
-      <div class="screen"></div>
-      <div class="screen"></div>
+    <!-- Меню -->
+    <div id="menu">
+        <button id="spinOne">Крутить 1</button>
+        <button id="spinTen">Крутить 10</button>
+        <p id="guaranteedCounter">До гарантированной S-редкости осталось: 10</p>
     </div>
-    <div class="item-display hidden">
-      <img id="item-image" src="" alt="Item" class="item-image">
-      <button id="back-btn" class="btn">Назад</button>
-    </div>
-    <audio id="gacha-music">
-      <source src="" type="audio/mpeg">
-    </audio>
-  </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script src="script.js"></script>
+    <!-- Блок для анимации или отображения результата -->
+    <div id="result"></div>
+
+    <script src="script.js"></script>
 </body>
 </html>
