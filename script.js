@@ -5,12 +5,12 @@ const S_ITEMS = ["assets/SItem1.png", "assets/SItem1.png", "assets/SItem1.png", 
 const menu = document.getElementById("menu");
 const gachaAnimation = document.getElementById("gacha-animation");
 const itemDisplay = document.querySelector(".item-display");
-const itemsContainer = document.createElement('div'); // Контейнер для нескольких предметов
+const itemImage = document.getElementById("item-image");
 
 const menuMusic = document.getElementById("menu-music");
 const gachaMusic = document.getElementById("gacha-music");
 const rollBtn = document.getElementById("roll-btn");
-const roll10Btn = document.getElementById("roll-10-btn");
+const roll10Btn = document.getElementById("roll-10-btn"); // Новая кнопка
 const backBtn = document.getElementById("back-btn");
 const rollsLeftDisplay = document.getElementById("rolls-left");
 
@@ -27,20 +27,23 @@ async function startGacha(spins) {
   menuMusic.pause();
   menuMusic.currentTime = 0;
 
-  // Очистим контейнер для предметов перед новыми крутками
-  itemsContainer.innerHTML = '';
-  itemsContainer.classList.add('items-container');
-  itemDisplay.appendChild(itemsContainer);
-
   for (let i = 0; i < spins; i++) {
     const { img, audio } = rollItem(); // Рассчитываем редкость сразу
-
     await playGachaMusic(audio); // Ждём, пока музыка сыграет перед следующей круткой
 
     // Запускаем анимацию экранов
-    await playScreenAnimation(); // Ждём окончания анимации экранов
-
-    revealItem(img); // Показать результат после завершения анимации
+    const screens = document.querySelectorAll(".screen");
+    gsap.fromTo(
+      screens,
+      { opacity: 0 },
+      {
+        opacity: 1,
+        duration: 0.5,
+        stagger: 0.5,
+        repeat: 6,
+        onComplete: () => revealItem(img), // Показать результат
+      }
+    );
   }
 
   // Обновляем счётчик до гарантии
@@ -57,33 +60,9 @@ function playGachaMusic(audioSrc) {
   });
 }
 
-// Асинхронная функция для анимации экранов
-function playScreenAnimation() {
-  return new Promise((resolve) => {
-    const screens = document.querySelectorAll(".screen");
-    gsap.fromTo(
-      screens,
-      { opacity: 0 },
-      {
-        opacity: 1,
-        duration: 0.5,
-        stagger: 0.5,
-        repeat: 6, // Повторяем анимацию 6 раз
-        yoyo: true, // Возврат к исходному состоянию после каждого мигания
-        onComplete: resolve // Завершаем промис после завершения анимации
-      }
-    );
-  });
-}
-
 function revealItem(img) {
   itemDisplay.classList.remove("hidden");
-
-  // Если несколько круток, добавляем новый элемент в контейнер
-  const newItem = document.createElement('img');
-  newItem.src = img;
-  newItem.classList.add('item-image');
-  itemsContainer.appendChild(newItem); // Добавляем картинку в контейнер
+  itemImage.src = img;
 }
 
 function rollItem() {
