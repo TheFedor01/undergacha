@@ -3,10 +3,13 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Arial', sans-serif;
-  color: #fff;
   background: #000;
-  text-align: center;
+  color: #fff;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 h1 {
@@ -28,6 +31,11 @@ h1 {
   animation: fadeIn 2s;
 }
 
+#guarantee-counter {
+  font-size: 1.2rem;
+  color: #fff;
+}
+
 /* Кнопки */
 .btn {
   padding: 10px 20px;
@@ -46,30 +54,57 @@ h1 {
 
 /* Гача-анимация */
 .gacha {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  position: relative;
+  width: 100%;
+  height: 100%;
   background: #111;
 }
 
-.screen-container {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
+#heart-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
 
-.screen {
-  width: 150px;
-  height: 150px;
-  background: #333;
-  animation: flicker 0.2s infinite alternate;
+/* Стили сердечек */
+.heart {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background-size: cover;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.5s, transform 1s;
+}
+
+.heart-yellow {
+  background-image: url('assets/heart-yellow.png');
+}
+
+.heart-orange {
+  background-image: url('assets/heart-orange.png');
+}
+
+.heart-green {
+  background-image: url('assets/heart-green.png');
+}
+
+.heart-blue {
+  background-image: url('assets/heart-blue.png');
+}
+
+.heart-purple {
+  background-image: url('assets/heart-purple.png');
 }
 
 /* Результат */
 .item-display {
-  margin-top: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 1s;
 }
 
 .item-image {
@@ -83,15 +118,6 @@ h1 {
 }
 
 /* Анимации */
-@keyframes flicker {
-  0% {
-    background: #333;
-  }
-  100% {
-    background: #ff4500;
-  }
-}
-
 @keyframes fadeIn {
   from {
     opacity: 0;
