@@ -44,11 +44,6 @@ h1 {
   background-color: #ff5500;
 }
 
-/* Кнопка "Крутить 10" */
-#roll-ten-btn {
-  margin-top: 10px;
-}
-
 /* Гача-анимация */
 .gacha {
   display: flex;
