@@ -1,6 +1,6 @@
 const B_ITEMS = ["assets/BItem1.png", "assets/BItem2.png", "assets/BItem3.png", "assets/BItem4.png", "assets/BItem5.png"];
 const A_ITEMS = ["assets/AItem1.png", "assets/AItem2.png", "assets/AItem3.png", "assets/AItem4.png", "assets/AItem5.png"];
-const S_ITEMS = ["assets/SItem1.png", "assets/SItem1.png", "assets/SItem1.png", "assets/SItem1.png", "assets/SItem1.png"];
+const S_ITEMS = ["assets/SItem1.png", "assets/SItem2.png", "assets/SItem3.png", "assets/SItem4.png", "assets/SItem5.png", "assets/SItem6.png", "assets/SItem7.png", "assets/SItem8.png"];
 
 const menu = document.getElementById("menu");
 const gachaAnimation = document.getElementById("gacha-animation");
