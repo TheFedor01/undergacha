@@ -1,43 +1,107 @@
+/* Основной стиль страницы */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    text-align: center;
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+  color: #fff;
+  background: #000;
+  text-align: center;
+  overflow: hidden;
 }
 
 h1 {
-    color: #333;
-    margin-top: 20px;
+  font-size: 3rem;
+  margin-bottom: 20px;
 }
 
-#menu {
-    margin: 20px;
+/* Меню */
+.menu {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #111;
 }
 
-button {
-    padding: 10px 20px;
-    margin: 10px;
-    background-color: #6200ea;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
+.title {
+  animation: fadeIn 2s;
 }
 
-button:hover {
-    background-color: #3700b3;
+/* Кнопки */
+.btn {
+  padding: 10px 20px;
+  background-color: #ff3300;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: background 0.3s;
 }
 
-#guaranteedCounter {
-    font-size: 18px;
-    color: #555;
-    margin-top: 20px;
+.btn:hover {
+  background-color: #ff5500;
 }
 
-#result {
-    margin-top: 30px;
-    font-size: 24px;
-    color: #333;
+/* Кнопка "Крутить 10" */
+#roll-ten-btn {
+  margin-top: 10px;
+}
+
+/* Гача-анимация */
+.gacha {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #111;
+}
+
+.screen-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.screen {
+  width: 150px;
+  height: 150px;
+  background: #333;
+  animation: flicker 0.2s infinite alternate;
+}
+
+/* Результат */
+.item-display {
+  margin-top: 20px;
+}
+
+.item-image {
+  width: 200px;
+  height: auto;
+}
+
+/* Скрытие элементов */
+.hidden {
+  display: none;
+}
+
+/* Анимации */
+@keyframes flicker {
+  0% {
+    background: #333;
+  }
+  100% {
+    background: #ff4500;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
