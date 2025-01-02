@@ -10,72 +10,115 @@ const itemImage = document.getElementById("item-image");
 const menuMusic = document.getElementById("menu-music");
 const gachaMusic = document.getElementById("gacha-music");
 const rollBtn = document.getElementById("roll-btn");
-const roll10Btn = document.getElementById("roll-10-btn"); // Новая кнопка
 const backBtn = document.getElementById("back-btn");
-const rollsLeftDisplay = document.getElementById("rolls-left");
+
+// Создаем кнопку "Крутить 10"
+const rollTenBtn = document.createElement("button");
+rollTenBtn.id = "roll-ten-btn";
+rollTenBtn.className = "btn";
+rollTenBtn.textContent = "Крутить 10";
+menu.appendChild(rollTenBtn);
 
 let counter = 0; // Счётчик круток для гарантии
 
 // Привязываем события
-rollBtn.addEventListener("click", () => startGacha(1)); // Одна крутка
-roll10Btn.addEventListener("click", () => startGacha(10)); // 10 круток
+rollBtn.addEventListener("click", () => startGacha(1));
+rollTenBtn.addEventListener("click", () => startGacha(10));
+backBtn.addEventListener("click", backToMenu);
 
-async function startGacha(spins) {
+function startGacha(times) {
+  // Скрыть меню
   menu.classList.add("hidden");
-  gachaAnimation.classList.remove("hidden");
 
+  // Остановить музыку из меню
   menuMusic.pause();
   menuMusic.currentTime = 0;
 
-  for (let i = 0; i < spins; i++) {
-    const { img, audio } = rollItem(); // Рассчитываем редкость сразу
-    await playGachaMusic(audio); // Ждём, пока музыка сыграет перед следующей круткой
-
-    // Запускаем анимацию экранов
-    const screens = document.querySelectorAll(".screen");
-    gsap.fromTo(
-      screens,
-      { opacity: 0 },
-      {
-        opacity: 1,
-        duration: 0.5,
-        stagger: 0.5,
-        repeat: 6,
-        onComplete: () => revealItem(img), // Показать результат
-      }
-    );
+  // Выдаём предметы по количеству круток
+  const results = [];
+  for (let i = 0; i < times; i++) {
+    results.push(rollItem());
   }
 
-  // Обновляем счётчик до гарантии
-  rollsLeftDisplay.textContent = 90 - (counter % 90);
-}
-
-// Асинхронная функция для воспроизведения музыки
-function playGachaMusic(audioSrc) {
-  return new Promise((resolve) => {
-    gachaMusic.src = audioSrc;
-    gachaMusic.play();
-
-    gachaMusic.onended = () => resolve(); // Разрешаем промис, когда музыка закончила играть
-  });
-}
-
-function revealItem(img) {
-  itemDisplay.classList.remove("hidden");
-  itemImage.src = img;
+  // Показываем результаты
+  if (times === 1) {
+    showAnimationAndResult(results[0]);
+  } else {
+    showMultipleResults(results);
+  }
 }
 
 function rollItem() {
   counter++;
   let random = Math.random() * 100;
+  let rarity, img, audio;
 
   if (counter % 90 === 0) {
-    return { img: randomItem(S_ITEMS), audio: "assets/gachaS.mp3" };
+    rarity = "S";
+    img = randomItem(S_ITEMS);
+    audio = "assets/gachaS.mp3";
   } else if (counter % 10 === 0 || random <= 1.2) {
-    return { img: randomItem(A_ITEMS), audio: "assets/gacha.mp3" };
+    rarity = "A";
+    img = randomItem(A_ITEMS);
+    audio = "assets/gacha.mp3";
   } else {
-    return { img: randomItem(B_ITEMS), audio: "assets/gacha.mp3" };
+    rarity = "B";
+    img = randomItem(B_ITEMS);
+    audio = "assets/gacha.mp3";
   }
+
+  return { rarity, img, audio };
+}
+
+function showAnimationAndResult({ img, audio }) {
+  // Показать гача-анимацию
+  gachaAnimation.classList.remove("hidden");
+
+  // Анимация экранов
+  const screens = document.querySelectorAll(".screen");
+  gachaMusic.src = audio;
+  gachaMusic.play();
+
+  gsap.fromTo(
+    screens,
+    { opacity: 0 },
+    {
+      opacity: 1,
+      duration: 0.5,
+      stagger: 0.5,
+      repeat: 6, // Длительность ~3 секунд
+      onComplete: () => revealItem(img),
+    }
+  );
+}
+
+function showMultipleResults(results) {
+  // Останавливаем текущую музыку
+  gachaMusic.pause();
+  gachaMusic.currentTime = 0;
+
+  // Показ всех результатов
+  const container = document.createElement("div");
+  container.style.display = "flex";
+  container.style.flexWrap = "wrap";
+  container.style.justifyContent = "center";
+  container.style.gap = "10px";
+
+  results.forEach(({ img }) => {
+    const imgElement = document.createElement("img");
+    imgElement.src = img;
+    imgElement.style.width = "100px";
+    imgElement.style.height = "auto";
+    container.appendChild(imgElement);
+  });
+
+  itemDisplay.appendChild(container);
+  itemDisplay.classList.remove("hidden");
+}
+
+function revealItem(img) {
+  itemImage.src = img;
+  itemDisplay.classList.remove("hidden");
 }
 
 function randomItem(array) {
@@ -83,12 +126,16 @@ function randomItem(array) {
 }
 
 function backToMenu() {
+  // Скрыть гача-анимацию и вернуть меню
+  itemDisplay.innerHTML = ""; // Очищаем предыдущие результаты
   itemDisplay.classList.add("hidden");
   gachaAnimation.classList.add("hidden");
   menu.classList.remove("hidden");
 
+  // Остановить гача-музыку
   gachaMusic.pause();
   gachaMusic.currentTime = 0;
 
+  // Включить музыку меню
   menuMusic.play();
 }
