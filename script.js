@@ -6,83 +6,72 @@ const menu = document.getElementById("menu");
 const gachaAnimation = document.getElementById("gacha-animation");
 const itemDisplay = document.querySelector(".item-display");
 const itemImage = document.getElementById("item-image");
+const heartContainer = document.getElementById("heart-container");
 
 const menuMusic = document.getElementById("menu-music");
 const gachaMusic = document.getElementById("gacha-music");
 const rollBtn = document.getElementById("roll-btn");
 const backBtn = document.getElementById("back-btn");
 
-// Добавляем счетчик до гарантированной S-редкости
-const guaranteeCounterText = document.createElement("p");
-guaranteeCounterText.id = "guarantee-counter";
-guaranteeCounterText.style.marginTop = "20px";
-guaranteeCounterText.style.fontSize = "1.2rem";
-guaranteeCounterText.style.color = "#fff";
-menu.appendChild(guaranteeCounterText);
-
 let counter = 0; // Счётчик круток для гарантии
-updateGuaranteeCounter();
 
 rollBtn.addEventListener("click", startGacha);
 backBtn.addEventListener("click", backToMenu);
 
 function startGacha() {
-  // Скрыть меню
   menu.classList.add("hidden");
-
-  // Остановить музыку из меню
   menuMusic.pause();
   menuMusic.currentTime = 0;
 
-  // Рассчитать редкость и получить предмет
   const { rarity, img, audio } = rollItem();
-
-  // Включить соответствующую музыку
   gachaMusic.src = audio;
   gachaMusic.play();
 
-  // Показать гача-анимацию и результат
   gachaAnimation.classList.remove("hidden");
-  const screens = document.querySelectorAll(".screen");
-
-  gsap.fromTo(
-    screens,
-    { opacity: 0 },
-    {
-      opacity: 1,
-      duration: 0.5,
-      stagger: 0.5,
-      repeat: 6, // Длительность ~3 секунд
-      onComplete: () => revealItem(img),
-    }
-  );
+  playHeartAnimation(img);
 }
 
-function rollItem() {
-  counter++;
-  updateGuaranteeCounter();
+function playHeartAnimation(itemImg) {
+  const hearts = [
+    createHeart("yellow", 200, 50),
+    createHeart("orange", 150, 150),
+    createHeart("green", -150, 150),
+    createHeart("blue", -200, 50),
+    createHeart("purple", 0, -200)
+  ];
 
-  let random = Math.random() * 100;
-  let rarity, img, audio;
+  const delays = [0, 2, 4, 6, 7]; // Время появления сердечек (секунды)
 
-  if (counter % 40 === 0) {
-    // Гарантированная S-редкость
-    rarity = "S";
-    img = randomItem(S_ITEMS);
-    audio = "assets/gachaS.mp3";
-  } else if (counter % 10 === 0 || random <= 1.2) {
-    // A-редкость
-    rarity = "A";
-    img = randomItem(A_ITEMS);
-    audio = "assets/gacha.mp3";
-  } else {
-    // B-редкость
-    rarity = "B";
-    img = randomItem(B_ITEMS);
-    audio = "assets/gacha.mp3";
-  }
+  hearts.forEach((heart, index) => {
+    setTimeout(() => {
+      heart.style.opacity = 1;
+    }, delays[index] * 1000);
+  });
 
-  return { rarity, img, audio };
+  setTimeout(() => {
+    hearts.forEach((heart) => {
+      gsap.to(heart, {
+        x: 0,
+        y: 0,
+        duration: 1,
+        onComplete: () => heart.remove()
+      });
+    });
+
+    setTimeout(() => {
+      revealItem(itemImg);
+    }, 1000);
+  }, 9000);
+}
+
+function createHeart(color, offsetX, offsetY) {
+  const heart = document.createElement("div");
+  heart.className = `heart heart-${color}`;
+  heart.style.left = `50%`;
+  heart.style.top = `50%`;
+  heart.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+  heartContainer.appendChild(heart);
+  return heart;
 }
 
 function revealItem(img) {
@@ -90,25 +79,37 @@ function revealItem(img) {
   itemDisplay.classList.remove("hidden");
 }
 
+function rollItem() {
+  counter++;
+  updateGuaranteeCounter();
+
+  let random = Math.random() * 100;
+  if (counter % 40 === 0) {
+    return { rarity: "S", img: randomItem(S_ITEMS), audio: "assets/gachaS.mp3" };
+  } else if (random <= 10) {
+    return { rarity: "A", img: randomItem(A_ITEMS), audio: "assets/gacha.mp3" };
+  } else {
+    return { rarity: "B", img: randomItem(B_ITEMS), audio: "assets/gacha.mp3" };
+  }
+}
+
 function randomItem(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
 
+function updateGuaranteeCounter() {
+  const counterDisplay = document.getElementById("guarantee-counter");
+  const remaining = 40 - (counter % 40);
+  counterDisplay.textContent = `До гарантированной S редкости осталось: ${remaining} круток`;
+}
+
 function backToMenu() {
-  // Скрыть гача-анимацию и вернуть меню
-  itemDisplay.classList.add("hidden");
   gachaAnimation.classList.add("hidden");
+  itemDisplay.classList.add("hidden");
   menu.classList.remove("hidden");
 
-  // Остановить гача-музыку
   gachaMusic.pause();
   gachaMusic.currentTime = 0;
 
-  // Включить музыку меню
   menuMusic.play();
-}
-
-function updateGuaranteeCounter() {
-  const remaining = 40 - (counter % 40);
-  guaranteeCounterText.textContent = `До гарантированной S-редкости: ${remaining}`;
 }
