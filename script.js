@@ -98,21 +98,16 @@ function showMultipleResults(results) {
   gachaMusic.currentTime = 0;
 
   // Показ всех результатов
-  const container = document.createElement("div");
-  container.style.display = "flex";
-  container.style.flexWrap = "wrap";
-  container.style.justifyContent = "center";
-  container.style.gap = "10px";
-
+  itemDisplay.innerHTML = ""; // Очищаем предыдущий результат
   results.forEach(({ img }) => {
     const imgElement = document.createElement("img");
     imgElement.src = img;
     imgElement.style.width = "100px";
     imgElement.style.height = "auto";
-    container.appendChild(imgElement);
+    imgElement.style.margin = "5px";
+    itemDisplay.appendChild(imgElement);
   });
 
-  itemDisplay.appendChild(container);
   itemDisplay.classList.remove("hidden");
 }
 
